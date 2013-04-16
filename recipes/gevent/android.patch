@@ -1,0 +1,49 @@
+diff -ur /home/max/workspace/gevent-1.0rc2/libev/ev.c gevent-1.0rc2/libev/ev.c
+--- /home/max/workspace/gevent-1.0rc2/libev/ev.c	2013-04-03 05:38:12.000000000 +0800
++++ gevent-1.0rc2/libev/ev.c	2013-04-16 16:57:07.315889108 +0800
+@@ -464,7 +464,6 @@
+  * This value is good at least till the year 4000.
+  */
+ #define MIN_INTERVAL  0.0001220703125 /* 1/2**13, good till 4000 */
+-/*#define MIN_INTERVAL  0.00000095367431640625 /* 1/2**20, good till 2200 */
+ 
+ #define MIN_TIMEJUMP  1. /* minimum timejump that gets detected (if monotonic clock available) */
+ #define MAX_BLOCKTIME 59.743 /* never wait longer than this time (to detect time jumps) */
+@@ -617,9 +616,6 @@
+   #if ECB_GCC_VERSION(4,7)
+     /* see comment below (stdatomic.h) about the C11 memory model. */
+     #define ECB_MEMORY_FENCE         __atomic_thread_fence (__ATOMIC_SEQ_CST)
+-  #elif defined __clang && __has_feature (cxx_atomic)
+-    /* see comment below (stdatomic.h) about the C11 memory model. */
+-    #define ECB_MEMORY_FENCE         __c11_atomic_thread_fence (__ATOMIC_SEQ_CST)
+   #elif ECB_GCC_VERSION(4,4) || defined __INTEL_COMPILER || defined __clang__
+     #define ECB_MEMORY_FENCE         __sync_synchronize ()
+   #elif _MSC_VER >= 1400 /* VC++ 2005 */
+diff -ur /home/max/workspace/gevent-1.0rc2/libev/ev_select.c gevent-1.0rc2/libev/ev_select.c
+--- /home/max/workspace/gevent-1.0rc2/libev/ev_select.c	2013-04-03 05:38:12.000000000 +0800
++++ gevent-1.0rc2/libev/ev_select.c	2013-04-16 16:44:09.407889199 +0800
+@@ -65,6 +65,10 @@
+ # define NFDBYTES (NFDBITS / 8)
+ #endif
+ 
++#ifdef ANDROID
++typedef int fd_mask;
++#endif
++
+ #include <string.h>
+ 
+ static void
+diff -ur /home/max/workspace/gevent-1.0rc2/setup.py gevent-1.0rc2/setup.py
+--- /home/max/workspace/gevent-1.0rc2/setup.py	2013-04-03 05:38:12.000000000 +0800
++++ gevent-1.0rc2/setup.py	2013-04-16 16:54:12.783889127 +0800
+@@ -51,8 +51,8 @@
+ 
+ define_macros = []
+ libraries = []
+-libev_configure_command = ["/bin/sh", abspath('libev/configure'), '> configure-output.txt']
+-ares_configure_command = ["/bin/sh", abspath('c-ares/configure'), 'CONFIG_COMMANDS= CONFIG_FILES= > configure-output.txt']
++libev_configure_command = ["/bin/sh", abspath('libev/configure --host=arm-linux'), '> configure-output.txt']
++ares_configure_command = ["/bin/sh", abspath('c-ares/configure --host=arm-linux'), 'CONFIG_COMMANDS= CONFIG_FILES= > configure-output.txt']
+ 
+ 
+ if sys.platform == 'win32':
