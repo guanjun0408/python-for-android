@@ -1,3 +1,63 @@
+Only in Python-3.3.2: build
+Only in Python-3.3.2: config.log
+Only in Python-3.3.2: config.site
+Only in Python-3.3.2: config.status
+Only in Python-3.3.2/Lib/collections: __pycache__
+Only in Python-3.3.2/Lib/distutils/command: __pycache__
+Only in Python-3.3.2/Lib/distutils: __pycache__
+Only in Python-3.3.2/Lib/encodings: __pycache__
+Only in Python-3.3.2/Lib/importlib: __pycache__
+Only in Python-3.3.2/Lib: __pycache__
+Only in Python-3.3.2: libpython3.3m.a
+Only in Python-3.3.2: libpython3.3m.so
+Only in Python-3.3.2: libpython3.3m.so.1.0
+Only in Python-3.3.2: libpython3.so
+Only in Python-3.3.2: Makefile
+Only in Python-3.3.2: Makefile.pre
+Only in Python-3.3.2/Misc: python.pc
+Only in Python-3.3.2/Modules: bufferedio.o
+Only in Python-3.3.2/Modules: bytesio.o
+Only in Python-3.3.2/Modules: _codecsmodule.o
+Only in Python-3.3.2/Modules: _collectionsmodule.o
+Only in Python-3.3.2/Modules: config.c
+Only in Python-3.3.2/Modules: config.o
+Only in Python-3.3.2/Modules: errnomodule.o
+Only in Python-3.3.2/Modules: faulthandler.o
+Only in Python-3.3.2/Modules: fileio.o
+Only in Python-3.3.2/Modules: _functoolsmodule.o
+Only in Python-3.3.2/Modules: gcmodule.o
+Only in Python-3.3.2/Modules: getbuildinfo.o
+Only in Python-3.3.2/Modules: getpath.o
+Only in Python-3.3.2/Modules: iobase.o
+Only in Python-3.3.2/Modules: _iomodule.o
+Only in Python-3.3.2/Modules: itertoolsmodule.o
+Only in Python-3.3.2/Modules: ld_so_aix
+Only in Python-3.3.2/Modules: main.o
+Only in Python-3.3.2/Modules: operator.o
+diff -rc Python-3.3.2-origin/Modules/posixmodule.c Python-3.3.2/Modules/posixmodule.c
+*** Python-3.3.2-origin/Modules/posixmodule.c	2013-05-16 00:32:59.000000000 +0800
+--- Python-3.3.2/Modules/posixmodule.c	2013-05-27 15:30:48.767133733 +0800
+***************
+*** 6117,6122 ****
+--- 6117,6123 ----
+      slave_fd = open(slave_name, O_RDWR | O_NOCTTY); /* open slave */
+      if (slave_fd < 0)
+          return posix_error();
++ #ifndef ANDROID
+  #if !defined(__CYGWIN__) && !defined(HAVE_DEV_PTC)
+      ioctl(slave_fd, I_PUSH, "ptem"); /* push ptem */
+      ioctl(slave_fd, I_PUSH, "ldterm"); /* push ldterm */
+***************
+*** 6124,6129 ****
+--- 6125,6131 ----
+      ioctl(slave_fd, I_PUSH, "ttcompat"); /* push ttcompat */
+  #endif /* __hpux */
+  #endif /* HAVE_CYGWIN */
++ #endif /* ANDROID */
+  #endif /* HAVE_OPENPTY */
+  
+      return Py_BuildValue("(ii)", master_fd, slave_fd);
+Only in Python-3.3.2/Modules: posixmodule.o
 diff -rc Python-3.3.2-origin/Modules/pwdmodule.c Python-3.3.2/Modules/pwdmodule.c
 *** Python-3.3.2-origin/Modules/pwdmodule.c	2013-05-16 00:32:59.000000000 +0800
 --- Python-3.3.2/Modules/pwdmodule.c	2013-05-27 11:08:18.003728652 +0800
@@ -16,9 +76,130 @@ diff -rc Python-3.3.2-origin/Modules/pwdmodule.c Python-3.3.2/Modules/pwdmodule.
       SETS(setIndex++, p->pw_dir);
       SETS(setIndex++, p->pw_shell);
   
+Only in Python-3.3.2/Modules: pwdmodule.o
+Only in Python-3.3.2/Modules: python.o
+Only in Python-3.3.2/Modules: Setup
+Only in Python-3.3.2/Modules: Setup.config
+Only in Python-3.3.2/Modules: Setup.local
+Only in Python-3.3.2/Modules: signalmodule.o
+diff -rc Python-3.3.2-origin/Modules/socketmodule.c Python-3.3.2/Modules/socketmodule.c
+*** Python-3.3.2-origin/Modules/socketmodule.c	2013-05-16 00:32:59.000000000 +0800
+--- Python-3.3.2/Modules/socketmodule.c	2013-05-27 15:29:19.563134945 +0800
+***************
+*** 150,155 ****
+--- 150,159 ----
+     On the other hand, not all Linux versions agree, so there the settings
+     computed by the configure script are needed! */
+  
++ #ifdef ANDROID
++ #undef HAVE_GETHOSTBYNAME_R
++ #endif
++ 
+  #ifndef linux
+  # undef HAVE_GETHOSTBYNAME_R_3_ARG
+  # undef HAVE_GETHOSTBYNAME_R_5_ARG
+Only in Python-3.3.2/Modules: _sre.o
+Only in Python-3.3.2/Modules: stringio.o
+Only in Python-3.3.2/Modules: symtablemodule.o
+Only in Python-3.3.2/Modules: _testembed
+Only in Python-3.3.2/Modules: _testembed.o
+Only in Python-3.3.2/Modules: textio.o
+Only in Python-3.3.2/Modules: _threadmodule.o
+Only in Python-3.3.2/Modules: _weakref.o
+Only in Python-3.3.2/Modules: xxsubtype.o
+Only in Python-3.3.2/Modules: zipimport.o
+Only in Python-3.3.2/Objects: abstract.o
+Only in Python-3.3.2/Objects: accu.o
+Only in Python-3.3.2/Objects: boolobject.o
+Only in Python-3.3.2/Objects: bytearrayobject.o
+Only in Python-3.3.2/Objects: bytes_methods.o
+Only in Python-3.3.2/Objects: bytesobject.o
+Only in Python-3.3.2/Objects: capsule.o
+Only in Python-3.3.2/Objects: cellobject.o
+Only in Python-3.3.2/Objects: classobject.o
+Only in Python-3.3.2/Objects: codeobject.o
+Only in Python-3.3.2/Objects: complexobject.o
+Only in Python-3.3.2/Objects: descrobject.o
+Only in Python-3.3.2/Objects: dictobject.o
+Only in Python-3.3.2/Objects: enumobject.o
+Only in Python-3.3.2/Objects: exceptions.o
+Only in Python-3.3.2/Objects: fileobject.o
+Only in Python-3.3.2/Objects: floatobject.o
+Only in Python-3.3.2/Objects: frameobject.o
+Only in Python-3.3.2/Objects: funcobject.o
+Only in Python-3.3.2/Objects: genobject.o
+Only in Python-3.3.2/Objects: iterobject.o
+Only in Python-3.3.2/Objects: listobject.o
+Only in Python-3.3.2/Objects: longobject.o
+Only in Python-3.3.2/Objects: memoryobject.o
+Only in Python-3.3.2/Objects: methodobject.o
+Only in Python-3.3.2/Objects: moduleobject.o
+Only in Python-3.3.2/Objects: namespaceobject.o
+Only in Python-3.3.2/Objects: object.o
+Only in Python-3.3.2/Objects: obmalloc.o
+Only in Python-3.3.2/Objects: rangeobject.o
+Only in Python-3.3.2/Objects: setobject.o
+Only in Python-3.3.2/Objects: sliceobject.o
+Only in Python-3.3.2/Objects: structseq.o
+Only in Python-3.3.2/Objects: tupleobject.o
+Only in Python-3.3.2/Objects: typeobject.o
+Only in Python-3.3.2/Objects: unicodectype.o
+Only in Python-3.3.2/Objects: unicodeobject.o
+Only in Python-3.3.2/Objects: weakrefobject.o
+Only in Python-3.3.2/Parser: acceler.o
+Only in Python-3.3.2/Parser: bitset.o
+Only in Python-3.3.2/Parser: firstsets.o
+Only in Python-3.3.2/Parser: grammar1.o
+Only in Python-3.3.2/Parser: grammar.o
+Only in Python-3.3.2/Parser: listnode.o
+Only in Python-3.3.2/Parser: metagrammar.o
+Only in Python-3.3.2/Parser: myreadline.o
+Only in Python-3.3.2/Parser: node.o
+Only in Python-3.3.2/Parser: parser.o
+Only in Python-3.3.2/Parser: parsetok.o
+Only in Python-3.3.2/Parser: parsetok_pgen.o
+Only in Python-3.3.2/Parser: pgen
+Only in Python-3.3.2/Parser: pgenmain.o
+Only in Python-3.3.2/Parser: pgen.o
+Only in Python-3.3.2/Parser: printgrammar.o
+Only in Python-3.3.2/Parser: tokenizer.o
+Only in Python-3.3.2/Parser: tokenizer_pgen.o
+Only in Python-3.3.2: pybuilddir.txt
+Only in Python-3.3.2: pyconfig.h
+Only in Python-3.3.2: python
+Only in Python-3.3.2/Python: asdl.o
+Only in Python-3.3.2/Python: ast.o
+diff -rc Python-3.3.2-origin/Python/bltinmodule.c Python-3.3.2/Python/bltinmodule.c
+*** Python-3.3.2-origin/Python/bltinmodule.c	2013-05-16 00:33:00.000000000 +0800
+--- Python-3.3.2/Python/bltinmodule.c	2013-05-27 15:27:44.071136243 +0800
+***************
+*** 24,30 ****
+  #ifdef HAVE_MBCS
+  const char *Py_FileSystemDefaultEncoding = "mbcs";
+  int Py_HasFileSystemDefaultEncoding = 1;
+! #elif defined(__APPLE__)
+  const char *Py_FileSystemDefaultEncoding = "utf-8";
+  int Py_HasFileSystemDefaultEncoding = 1;
+  #else
+--- 24,30 ----
+  #ifdef HAVE_MBCS
+  const char *Py_FileSystemDefaultEncoding = "mbcs";
+  int Py_HasFileSystemDefaultEncoding = 1;
+! #elif defined(__APPLE__) || defined(ANDROID)
+  const char *Py_FileSystemDefaultEncoding = "utf-8";
+  int Py_HasFileSystemDefaultEncoding = 1;
+  #else
+Only in Python-3.3.2/Python: bltinmodule.o
+Only in Python-3.3.2/Python: ceval.o
+Only in Python-3.3.2/Python: codecs.o
+Only in Python-3.3.2/Python: compile.o
+Only in Python-3.3.2/Python: dtoa.o
+Only in Python-3.3.2/Python: dynamic_annotations.o
+Only in Python-3.3.2/Python: dynload_shlib.o
+Only in Python-3.3.2/Python: errors.o
 diff -rc Python-3.3.2-origin/Python/fileutils.c Python-3.3.2/Python/fileutils.c
 *** Python-3.3.2-origin/Python/fileutils.c	2013-05-16 00:33:00.000000000 +0800
---- Python-3.3.2/Python/fileutils.c	2013-05-27 11:05:48.571727098 +0800
+--- Python-3.3.2/Python/fileutils.c	2013-05-27 15:34:00.199131131 +0800
 ***************
 *** 98,103 ****
 --- 98,104 ----
@@ -31,17 +212,20 @@ diff -rc Python-3.3.2-origin/Python/fileutils.c Python-3.3.2/Python/fileutils.c
           goto error;
 ***************
 *** 105,110 ****
---- 106,112 ----
+--- 106,114 ----
           /* the LC_CTYPE locale is different than C */
           return 0;
       }
++ #else
++     return 0;
 + #endif
   
   #if defined(HAVE_LANGINFO_H) && defined(CODESET)
       codeset = nl_langinfo(CODESET);
+Only in Python-3.3.2/Python: fileutils.o
 diff -rc Python-3.3.2-origin/Python/formatter_unicode.c Python-3.3.2/Python/formatter_unicode.c
 *** Python-3.3.2-origin/Python/formatter_unicode.c	2013-05-16 00:33:00.000000000 +0800
---- Python-3.3.2/Python/formatter_unicode.c	2013-05-27 10:51:48.371718356 +0800
+--- Python-3.3.2/Python/formatter_unicode.c	2013-05-27 15:35:04.819130253 +0800
 ***************
 *** 665,670 ****
 --- 665,671 ----
@@ -53,12 +237,100 @@ diff -rc Python-3.3.2-origin/Python/formatter_unicode.c Python-3.3.2/Python/form
           locale_info->decimal_point = PyUnicode_DecodeLocale(
                                            locale_data->decimal_point,
 ***************
-*** 679,684 ****
---- 680,686 ----
-              return -1;
+*** 680,685 ****
+--- 681,687 ----
           }
           locale_info->grouping = locale_data->grouping;
-+ #endif
           break;
++ #endif
       }
       case LT_DEFAULT_LOCALE:
+          locale_info->decimal_point = PyUnicode_FromOrdinal('.');
+Only in Python-3.3.2/Python: formatter_unicode.o
+Only in Python-3.3.2/Python: frozenmain.o
+Only in Python-3.3.2/Python: frozen.o
+Only in Python-3.3.2/Python: future.o
+Only in Python-3.3.2/Python: getargs.o
+Only in Python-3.3.2/Python: getcompiler.o
+Only in Python-3.3.2/Python: getcopyright.o
+Only in Python-3.3.2/Python: getopt.o
+Only in Python-3.3.2/Python: getplatform.o
+Only in Python-3.3.2/Python: getversion.o
+Only in Python-3.3.2/Python: graminit.o
+Only in Python-3.3.2/Python: importdl.o
+Only in Python-3.3.2/Python: import.o
+Only in Python-3.3.2/Python: marshal.o
+Only in Python-3.3.2/Python: modsupport.o
+Only in Python-3.3.2/Python: mysnprintf.o
+Only in Python-3.3.2/Python: mystrtoul.o
+Only in Python-3.3.2/Python: peephole.o
+Only in Python-3.3.2/Python: pyarena.o
+Only in Python-3.3.2/Python: pyctype.o
+Only in Python-3.3.2/Python: pyfpe.o
+Only in Python-3.3.2/Python: pymath.o
+Only in Python-3.3.2/Python: pystate.o
+Only in Python-3.3.2/Python: pystrcmp.o
+diff -rc Python-3.3.2-origin/Python/pystrtod.c Python-3.3.2/Python/pystrtod.c
+*** Python-3.3.2-origin/Python/pystrtod.c	2013-05-16 00:33:00.000000000 +0800
+--- Python-3.3.2/Python/pystrtod.c	2013-05-27 15:38:09.119127749 +0800
+***************
+*** 177,184 ****
+--- 177,188 ----
+  
+      fail_pos = NULL;
+  
++ #ifndef ANDROID
+      locale_data = localeconv();
+      decimal_point = locale_data->decimal_point;
++ #else
++     decimal_point = ".";
++ #endif
+      decimal_point_len = strlen(decimal_point);
+  
+      assert(decimal_point_len != 0);
+***************
+*** 379,385 ****
+--- 383,393 ----
+  change_decimal_from_locale_to_dot(char* buffer)
+  {
+      struct lconv *locale_data = localeconv();
++ #ifndef ANDROID
+      const char *decimal_point = locale_data->decimal_point;
++ #else
++     const char *decimal_point = ".";
++ #endif
+  
+      if (decimal_point[0] != '.' || decimal_point[1] != 0) {
+          size_t decimal_point_len = strlen(decimal_point);
+Only in Python-3.3.2/Python: pystrtod.o
+Only in Python-3.3.2/Python: Python-ast.o
+Only in Python-3.3.2/Python: pythonrun.o
+Only in Python-3.3.2/Python: pytime.o
+Only in Python-3.3.2/Python: random.o
+Only in Python-3.3.2/Python: structmember.o
+Only in Python-3.3.2/Python: symtable.o
+Only in Python-3.3.2/Python: sysmodule.o
+Only in Python-3.3.2/Python: thread.o
+Only in Python-3.3.2/Python: traceback.o
+Only in Python-3.3.2/Python: _warnings.o
+Only in Python-3.3.2: python-gdb.py
+diff -rc Python-3.3.2-origin/setup.py Python-3.3.2/setup.py
+*** Python-3.3.2-origin/setup.py	2013-05-16 00:33:00.000000000 +0800
+--- Python-3.3.2/setup.py	2013-05-27 15:26:30.555137242 +0800
+***************
+*** 31,37 ****
+  COMPILED_WITH_PYDEBUG = ('--with-pydebug' in sysconfig.get_config_var("CONFIG_ARGS"))
+  
+  # This global variable is used to hold the list of modules to be disabled.
+! disabled_module_list = []
+  
+  def add_dir_to_list(dirlist, dir):
+      """Add the directory 'dir' to the list 'dirlist' (after any relative
+--- 31,37 ----
+  COMPILED_WITH_PYDEBUG = ('--with-pydebug' in sysconfig.get_config_var("CONFIG_ARGS"))
+  
+  # This global variable is used to hold the list of modules to be disabled.
+! disabled_module_list = ['spwd', '_ctypes','bz2','ossaudiodev','_curses','_curses_panel','readline','_locale','_bsddb','gdbm','dbm','nis','linuxaudiodev','crypt','_multiprocessing']
+  
+  def add_dir_to_list(dirlist, dir):
+      """Add the directory 'dir' to the list 'dirlist' (after any relative
