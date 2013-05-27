@@ -22,14 +22,15 @@ function build_hostpython() {
 		return
 	fi
 
-    ./configure
+    ./configure --prefix="$BUILD_PATH/python_host"
     try make
+    try make install
     try cp Parser/pgen hostpgen
 
 	if [ -f python.exe ]; then
-		try mv python.exe hostpython
+		try cp python.exe hostpython
 	elif [ -f python ]; then
-		try mv python hostpython
+		try cp python hostpython
 	else
 		error "Unable to found the python executable?"
 		exit 1

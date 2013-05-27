@@ -19,6 +19,9 @@ function build_gevent() {
 
 	cd $BUILD_gevent
 
+    mv $BUILD_PATH/python-install/lib/python3.3/lib-dynload $BUILD_PATH/python-install/lib/python3.3/lib-dynload.bak 
+    cp -R $BUILD_PATH/python_host/lib/python3.3/lib-dynload $BUILD_PATH/python-install/lib/python3.3/
+
 	push_arm
 
     export GEVENT_RESOLVER="ares"
@@ -32,6 +35,9 @@ function build_gevent() {
 	try $BUILD_PATH/python-install/bin/python.host setup.py install -O2 
 
 	pop_arm
+
+    rm -rf $BUILD_PATH/python-install/lib/python3.3/lib-dynload
+    mv $BUILD_PATH/python-install/lib/python3.3/lib-dynload.bak $BUILD_PATH/python-install/lib/python3.3/lib-dynload
 }
 
 function postbuild_gevent() {

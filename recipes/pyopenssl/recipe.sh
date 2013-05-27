@@ -19,6 +19,9 @@ function build_pyopenssl() {
 
 	cd $BUILD_pyopenssl
 
+    mv $BUILD_PATH/python-install/lib/python3.3/lib-dynload $BUILD_PATH/python-install/lib/python3.3/lib-dynload.bak 
+    cp -R $BUILD_PATH/python_host/lib/python3.3/lib-dynload $BUILD_PATH/python-install/lib/python3.3/
+
 	push_arm
 
 	export CC="$CC -I$BUILD_openssl/include"
@@ -32,6 +35,9 @@ function build_pyopenssl() {
 	try rm -rf $BUILD_PATH/python-install/lib/python*/site-packages/OpenSSL/test
 
 	pop_arm
+
+    rm -rf $BUILD_PATH/python-install/lib/python3.3/lib-dynload
+    mv $BUILD_PATH/python-install/lib/python3.3/lib-dynload.bak $BUILD_PATH/python-install/lib/python3.3/lib-dynload
 }
 
 function postbuild_pyopenssl() {

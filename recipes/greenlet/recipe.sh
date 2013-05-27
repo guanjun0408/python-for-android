@@ -13,11 +13,14 @@ function prebuild_greenlet() {
 
 function build_greenlet() {
 
-    if [ -f "$BUILD_PATH/python-install/lib/python2.7/site-packages/greenlet.so" ]; then
+    if [ -f "$BUILD_PATH/python-install/lib/python3.3/site-packages/greenlet.so" ]; then
         return
     fi
 
 	cd $BUILD_greenlet
+
+    mv $BUILD_PATH/python-install/lib/python3.3/lib-dynload $BUILD_PATH/python-install/lib/python3.3/lib-dynload.bak 
+    cp -R $BUILD_PATH/python_host/lib/python3.3/lib-dynload $BUILD_PATH/python-install/lib/python3.3/
 
 	push_arm
 
@@ -31,6 +34,9 @@ function build_greenlet() {
 	try $BUILD_PATH/python-install/bin/python.host setup.py install -O2
 
 	pop_arm
+
+    rm -rf $BUILD_PATH/python-install/lib/python3.3/lib-dynload
+    mv $BUILD_PATH/python-install/lib/python3.3/lib-dynload.bak $BUILD_PATH/python-install/lib/python3.3/lib-dynload
 }
 
 function postbuild_greenlet() {

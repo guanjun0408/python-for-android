@@ -51,6 +51,7 @@ function build_python() {
 	fi
 
     export CFLAGS="$CFLAGS -DANDROID -DDOUBLE_IS_LITTLE_ENDIAN_IEEE754"
+    export PATH=$PATH:$BUILD_PATH/python_host/bin
 
     try ./configure --host=arm-linux-androideabi --build=x86_64-linux --prefix="$BUILD_PATH/python-install"  --enable-shared --disable-ipv6 CONFIG_SITE=config.site --disable-framework
     # first run
