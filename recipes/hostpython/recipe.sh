@@ -1,8 +1,9 @@
 #!/bin/bash
 
-VERSION_hostpython=2.7.2
+VERSION_hostpython=3.3.2
 URL_hostpython=http://python.org/ftp/python/$VERSION_hostpython/Python-$VERSION_hostpython.tar.bz2
-MD5_hostpython=ba7b2f11ffdbf195ee0d111b9455a5bd
+MD5_hostpython=7dffe775f3bea68a44f762a3490e5e28
+
 
 # must be generated ?
 BUILD_hostpython=$BUILD_PATH/hostpython/$(get_directory $URL_hostpython)
@@ -10,7 +11,6 @@ RECIPE_hostpython=$RECIPES_PATH/hostpython
 
 function prebuild_hostpython() {
 	cd $BUILD_hostpython
-	try cp $RECIPE_hostpython/Setup Modules/Setup
 }
 
 function build_hostpython() {
@@ -23,7 +23,7 @@ function build_hostpython() {
 	fi
 
     try ./configure
-    try make -j5
+    try make
     try mv Parser/pgen hostpgen
 
 	if [ -f python.exe ]; then

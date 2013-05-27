@@ -1,0 +1,64 @@
+diff -rc Python-3.3.2-origin/Modules/pwdmodule.c Python-3.3.2/Modules/pwdmodule.c
+*** Python-3.3.2-origin/Modules/pwdmodule.c	2013-05-16 00:32:59.000000000 +0800
+--- Python-3.3.2/Modules/pwdmodule.c	2013-05-27 11:08:18.003728652 +0800
+***************
+*** 79,86 ****
+--- 79,90 ----
+  #ifdef __VMS
+      SETS(setIndex++, "");
+  #else
++ #ifdef ANDROID
++     SETS(setIndex++, "");
++ #else
+      SETS(setIndex++, p->pw_gecos);
+  #endif
++ #endif
+      SETS(setIndex++, p->pw_dir);
+      SETS(setIndex++, p->pw_shell);
+  
+diff -rc Python-3.3.2-origin/Python/fileutils.c Python-3.3.2/Python/fileutils.c
+*** Python-3.3.2-origin/Python/fileutils.c	2013-05-16 00:33:00.000000000 +0800
+--- Python-3.3.2/Python/fileutils.c	2013-05-27 11:05:48.571727098 +0800
+***************
+*** 98,103 ****
+--- 98,104 ----
+      };
+  #endif
+  
++ #ifndef ANDROID
+      loc = setlocale(LC_CTYPE, NULL);
+      if (loc == NULL)
+          goto error;
+***************
+*** 105,110 ****
+--- 106,112 ----
+          /* the LC_CTYPE locale is different than C */
+          return 0;
+      }
++ #endif
+  
+  #if defined(HAVE_LANGINFO_H) && defined(CODESET)
+      codeset = nl_langinfo(CODESET);
+diff -rc Python-3.3.2-origin/Python/formatter_unicode.c Python-3.3.2/Python/formatter_unicode.c
+*** Python-3.3.2-origin/Python/formatter_unicode.c	2013-05-16 00:33:00.000000000 +0800
+--- Python-3.3.2/Python/formatter_unicode.c	2013-05-27 10:51:48.371718356 +0800
+***************
+*** 665,670 ****
+--- 665,671 ----
+  {
+      switch (type) {
+      case LT_CURRENT_LOCALE: {
++ #ifndef ANDROID
+          struct lconv *locale_data = localeconv();
+          locale_info->decimal_point = PyUnicode_DecodeLocale(
+                                           locale_data->decimal_point,
+***************
+*** 679,684 ****
+--- 680,686 ----
+              return -1;
+          }
+          locale_info->grouping = locale_data->grouping;
++ #endif
+          break;
+      }
+      case LT_DEFAULT_LOCALE:

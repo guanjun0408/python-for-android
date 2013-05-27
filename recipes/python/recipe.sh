@@ -1,9 +1,9 @@
 #!/bin/bash
 
-VERSION_python=2.7.2
+VERSION_python=3.3.2
 DEPS_python=(hostpython)
 URL_python=http://python.org/ftp/python/$VERSION_python/Python-$VERSION_python.tar.bz2
-MD5_python=ba7b2f11ffdbf195ee0d111b9455a5bd
+MD5_python=7dffe775f3bea68a44f762a3490e5e28
 
 # must be generated ?
 BUILD_python=$BUILD_PATH/python/$(get_directory $URL_python)
@@ -18,22 +18,8 @@ function prebuild_python() {
 		return
 	fi
 
-	try patch -p1 < $RECIPE_python/patches/Python-$VERSION_python-xcompile.patch
-	try patch -p1 < $RECIPE_python/patches/disable-modules.patch
-	try patch -p1 < $RECIPE_python/patches/fix-locale.patch
-	try patch -p1 < $RECIPE_python/patches/fix-gethostbyaddr.patch
-	try patch -p1 < $RECIPE_python/patches/fix-setup-flags.patch
-	try patch -p1 < $RECIPE_python/patches/fix-filesystemdefaultencoding.patch
-	try patch -p1 < $RECIPE_python/patches/fix-termios.patch
-	try patch -p1 < $RECIPE_python/patches/verbose-compilation.patch
-	try patch -p1 < $RECIPE_python/patches/fix-remove-corefoundation.patch
-	try patch -p1 < $RECIPE_python/patches/fix-dynamic-lookup.patch
-
-	system=$(uname -s)
-	if [ "X$system" == "XDarwin" ]; then
-		try patch -p1 < $RECIPE_python/patches/fix-configure-darwin.patch
-		try patch -p1 < $RECIPE_python/patches/fix-distutils-darwin.patch
-	fi
+	try cp $RECIPE_python/config.site .
+	try patch -p1 < $RECIPE_python/fix-$VERSION_python.patch
 
 	# everything done, touch the marker !
 	touch .patched
@@ -44,14 +30,9 @@ function build_python() {
 	cd $BUILD_python
 
 	# if the last step have been done, avoid all
-	if [ -f libpython2.7.so ]; then
+	if [ -f libpython3.3m.so ]; then
 		return
 	fi
-	
-	# copy same module from host python
-	try cp $RECIPE_hostpython/Setup Modules
-	try cp $BUILD_hostpython/hostpython .
-	try cp $BUILD_hostpython/hostpgen .
 
 	push_arm
 
@@ -69,26 +50,15 @@ function build_python() {
 		export LDFLAGS="$LDFLAGS -L$SRC_PATH/obj/local/$ARCH/"
 	fi
 
-	try ./configure --host=arm-eabi --prefix="$BUILD_PATH/python-install" --enable-shared --disable-toolbox-glue --disable-framework
-	echo ./configure --host=arm-eabi --prefix="$BUILD_PATH/python-install" --enable-shared --disable-toolbox-glue --disable-framework
-	echo $MAKE HOSTPYTHON=$BUILD_python/hostpython HOSTPGEN=$BUILD_python/hostpgen CROSS_COMPILE_TARGET=yes INSTSONAME=libpython2.7.so
-	cp HOSTPYTHON=$BUILD_python/hostpython python
+	try cp $BUILD_hostpython/hostpgen Parser/pgen
+    try ./configure --host=arm-linux-androideabi --build=x86_64-linux --prefix=/home/max/Workspace/python3-arm --enable-shared --disable-ipv6 CONFIG_SITE=config.site --disable-framework --disable-toolbox-glue
+    try CFLAGS="-DANDROID -DDOUBLE_IS_LITTLE_ENDIAN_IEEE754" make
+    try make install
 
-	# FIXME, the first time, we got a error at:
-	# python$EXE ../../Tools/scripts/h2py.py -i '(u_long)' /usr/include/netinet/in.h
-    # /home/tito/code/python-for-android/build/python/Python-2.7.2/python: 1: Syntax error: word unexpected (expecting ")")
-	# because at this time, python is arm, not x86. even that, why /usr/include/netinet/in.h is used ?
-	# check if we can avoid this part.
-
-	debug 'First install (failing..)'
-	$MAKE install HOSTPYTHON=$BUILD_python/hostpython HOSTPGEN=$BUILD_python/hostpgen CROSS_COMPILE_TARGET=yes INSTSONAME=libpython2.7.so
-	debug 'Second install.'
-	touch python.exe python
-	$MAKE install HOSTPYTHON=$BUILD_python/hostpython HOSTPGEN=$BUILD_python/hostpgen CROSS_COMPILE_TARGET=yes INSTSONAME=libpython2.7.so
 	pop_arm
 
 	try cp $BUILD_hostpython/hostpython $BUILD_PATH/python-install/bin/python.host
-	try cp libpython2.7.so $LIBS_PATH/
+	try cp libpython3.3m.so $LIBS_PATH/
 }
 
 
