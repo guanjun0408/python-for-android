@@ -50,9 +50,16 @@ function build_python() {
 		export LDFLAGS="$LDFLAGS -L$SRC_PATH/obj/local/$ARCH/"
 	fi
 
+    export CFLAGS="$CFLAGS -DANDROID -DDOUBLE_IS_LITTLE_ENDIAN_IEEE754"
+
+    try ./configure --host=arm-linux-androideabi --build=x86_64-linux --prefix="$BUILD_PATH/python-install"  --enable-shared --disable-ipv6 CONFIG_SITE=config.site --disable-framework
+    # first run
+    make
+
+    # second run
 	try cp $BUILD_hostpython/hostpgen Parser/pgen
-    try ./configure --host=arm-linux-androideabi --build=x86_64-linux --prefix=/home/max/Workspace/python3-arm --enable-shared --disable-ipv6 CONFIG_SITE=config.site --disable-framework --disable-toolbox-glue
-    try CFLAGS="-DANDROID -DDOUBLE_IS_LITTLE_ENDIAN_IEEE754" make
+    try cp $RECIPE_python/Setup Modules/Setup
+    try make
     try make install
 
 	pop_arm

@@ -13,7 +13,7 @@ function prebuild_gevent() {
 
 function build_gevent() {
 
-    if [ -d "$BUILD_PATH/python-install/lib/python2.7/site-packages/gevent" ]; then
+    if [ -d "$BUILD_PATH/python-install/lib/python3.3/site-packages/gevent" ]; then
         return
     fi
 

@@ -181,7 +181,7 @@ function push_arm() {
 	export RANLIB="$TOOLCHAIN_PREFIX-ranlib"
 	export LD="$TOOLCHAIN_PREFIX-ld"
 	export STRIP="$TOOLCHAIN_PREFIX-strip --strip-unneeded"
-	export MAKE="make -j5"
+	export MAKE="make"
 
 	# Use ccache ?
 	which ccache &>/dev/null

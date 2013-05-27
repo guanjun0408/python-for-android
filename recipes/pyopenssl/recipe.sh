@@ -13,7 +13,7 @@ function prebuild_pyopenssl() {
 
 function build_pyopenssl() {
 
-	if [ -d "$BUILD_PATH/python-install/lib/python2.7/site-packages/pyOpenSSL" ]; then
+	if [ -d "$BUILD_PATH/python-install/lib/python3.3/site-packages/pyOpenSSL" ]; then
 		return
 	fi
 

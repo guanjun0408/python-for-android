@@ -22,9 +22,9 @@ function build_hostpython() {
 		return
 	fi
 
-    try ./configure
+    ./configure
     try make
-    try mv Parser/pgen hostpgen
+    try cp Parser/pgen hostpgen
 
 	if [ -f python.exe ]; then
 		try mv python.exe hostpython
