@@ -158,11 +158,13 @@ function push_arm() {
 	else
 		#if [ "X${ANDROIDNDKVER:0:2}" == "Xr7" ] || [ "X$ANDROIDNDKVER" == "Xr8" ]; then
 		# assume this toolchain is the same for all the next ndk... until a new one is out.
-		export TOOLCHAIN_PREFIX=arm-linux-androideabi
+		# export TOOLCHAIN_PREFIX=arm-linux-androideabi
+		export TOOLCHAIN_PREFIX=i686-linux-android
 		export TOOLCHAIN_VERSION=4.6
 	fi
 
-	export PATH="$ANDROIDNDK/toolchains/$TOOLCHAIN_PREFIX-$TOOLCHAIN_VERSION/prebuilt/$PYPLATFORM-x86/bin/:$ANDROIDNDK:$ANDROIDSDK/tools:$PATH"
+	# export PATH="$ANDROIDNDK/toolchains/$TOOLCHAIN_PREFIX-$TOOLCHAIN_VERSION/prebuilt/$PYPLATFORM-x86/bin/:$ANDROIDNDK:$ANDROIDSDK/tools:$PATH"
+	export PATH="$ANDROIDNDK/toolchains/x86-$TOOLCHAIN_VERSION/prebuilt/$PYPLATFORM-x86/bin/:$ANDROIDNDK:$ANDROIDSDK/tools:$PATH"
 
 	# search compiler in the path, to fail now instead of later.
 	CC=$(which $TOOLCHAIN_PREFIX-gcc)
@@ -297,9 +299,11 @@ function run_prepare() {
 	debug "NDK version is $ANDROIDNDKVER"
 	debug "API level set to $ANDROIDAPI"
 
-	export NDKPLATFORM="$ANDROIDNDK/platforms/android-$ANDROIDAPI/arch-arm"
-	export ARCH="armeabi"
+	# export NDKPLATFORM="$ANDROIDNDK/platforms/android-$ANDROIDAPI/arch-arm"
+	# export ARCH="armeabi"
 	#export ARCH="armeabi-v7a" # not tested yet.
+	export NDKPLATFORM="$ANDROIDNDK/platforms/android-$ANDROIDAPI/arch-x86"
+	export ARCH="x86"
 
 	info "Check mandatory tools"
 	# ensure that some tools are existing

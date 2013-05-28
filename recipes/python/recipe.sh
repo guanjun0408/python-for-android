@@ -30,7 +30,7 @@ function build_python() {
 	cd $BUILD_python
 
 	# if the last step have been done, avoid all
-	if [ -f libpython3.3m.so ]; then
+	if [ -f python ]; then
 		return
 	fi
 
@@ -50,10 +50,13 @@ function build_python() {
 		export LDFLAGS="$LDFLAGS -L$SRC_PATH/obj/local/$ARCH/"
 	fi
 
-    export CFLAGS="$CFLAGS -DANDROID -DDOUBLE_IS_LITTLE_ENDIAN_IEEE754"
+    export CFLAGS="$CFLAGS -DANDROID"
     export PATH=$PATH:$BUILD_PATH/python_host/bin
 
-    try ./configure --host=arm-linux-androideabi --build=x86_64-linux --prefix="$BUILD_PATH/python-install"  --enable-shared --disable-ipv6 CONFIG_SITE=config.site --disable-framework
+    try ./configure --host=$TOOLCHAIN_PREFIX --build=x86_64-linux --prefix="$BUILD_PATH/python-install" --disable-ipv6 CONFIG_SITE=config.site --disable-framework
+
+    try cp $RECIPE_python/pyconfig.h pyconfig.h
+
     # first run
     make
 
@@ -66,7 +69,7 @@ function build_python() {
 	pop_arm
 
 	try cp $BUILD_hostpython/hostpython $BUILD_PATH/python-install/bin/python.host
-	try cp libpython3.3m.so $LIBS_PATH/
+	# try cp libpython3.3m.so $LIBS_PATH/
 }
 
 

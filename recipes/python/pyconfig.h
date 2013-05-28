@@ -76,7 +76,7 @@
 
 /* Define if mbstowcs(NULL, "text", 0) does not return the number of wide
    chars that would be converted. */
-/* #undef HAVE_BROKEN_MBSTOWCS */
+#define HAVE_BROKEN_MBSTOWCS
 
 /* Define if nice() returns success/failure instead of the new priority. */
 /* #undef HAVE_BROKEN_NICE */

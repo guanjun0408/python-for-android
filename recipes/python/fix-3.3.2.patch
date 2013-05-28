@@ -1,3 +1,55 @@
+diff -rc Python-3.3.2-origin/Modules/_decimal/_decimal.c Python-3.3.2/Modules/_decimal/_decimal.c
+*** Python-3.3.2-origin/Modules/_decimal/_decimal.c	2013-05-16 00:32:58.000000000 +0800
+--- Python-3.3.2/Modules/_decimal/_decimal.c	2013-05-28 13:48:29.570043072 +0800
+***************
+*** 38,43 ****
+--- 38,46 ----
+  #include "docstrings.h"
+  #include "memory.h"
+  
++ #ifdef ANDROID
++   extern size_t android_mbstowcs(wchar_t *dest, char * in, int maxlen);
++ #endif
+  
+  /*
+   * Type sizes with assertions in mpdecimal.h and pyport.h:
+***************
+*** 3106,3112 ****
+--- 3109,3119 ----
+      wchar_t buf[2];
+      size_t n;
+  
++ #ifndef ANDROID
+      n = mbstowcs(buf, s, 2);
++ #else
++     n = android_mbstowcs(buf, s, 2);
++ #endif
+      if (n != 1) { /* Issue #7442 */
+          PyErr_SetString(PyExc_ValueError,
+              "invalid decimal point or unsupported "
+diff -rc Python-3.3.2-origin/Modules/_localemodule.c Python-3.3.2/Modules/_localemodule.c
+*** Python-3.3.2-origin/Modules/_localemodule.c	2013-05-16 00:32:58.000000000 +0800
+--- Python-3.3.2/Modules/_localemodule.c	2013-05-28 13:48:15.206043267 +0800
+***************
+*** 133,138 ****
+--- 133,139 ----
+  static PyObject*
+  PyLocale_localeconv(PyObject* self)
+  {
++ #ifndef ANDROID
+      PyObject* result;
+      struct lconv *l;
+      PyObject *x;
+***************
+*** 193,198 ****
+--- 194,200 ----
+    failed:
+      Py_XDECREF(result);
+      Py_XDECREF(x);
++ #endif // ANDROID
+      return NULL;
+  }
+  
 diff -rc Python-3.3.2-origin/Modules/posixmodule.c Python-3.3.2/Modules/posixmodule.c
 *** Python-3.3.2-origin/Modules/posixmodule.c	2013-05-16 00:32:59.000000000 +0800
 --- Python-3.3.2/Modules/posixmodule.c	2013-05-27 15:30:48.767133733 +0800
@@ -39,6 +91,29 @@ diff -rc Python-3.3.2-origin/Modules/pwdmodule.c Python-3.3.2/Modules/pwdmodule.
       SETS(setIndex++, p->pw_dir);
       SETS(setIndex++, p->pw_shell);
   
+diff -rc Python-3.3.2-origin/Modules/python.c Python-3.3.2/Modules/python.c
+*** Python-3.3.2-origin/Modules/python.c	2013-05-16 00:32:59.000000000 +0800
+--- Python-3.3.2/Modules/python.c	2013-05-28 14:27:11.702011516 +0800
+***************
+*** 38,43 ****
+--- 38,44 ----
+          fprintf(stderr, "out of memory\n");
+          return 1;
+      }
++ #ifndef ANDROID
+      oldloc = strdup(setlocale(LC_ALL, NULL));
+      setlocale(LC_ALL, "");
+      for (i = 0; i < argc; i++) {
+***************
+*** 55,60 ****
+--- 56,62 ----
+  
+      setlocale(LC_ALL, oldloc);
+      free(oldloc);
++ #endif
+      res = Py_Main(argc, argv_copy);
+      for (i = 0; i < argc; i++) {
+          PyMem_Free(argv_copy2[i]);
 diff -rc Python-3.3.2-origin/Modules/socketmodule.c Python-3.3.2/Modules/socketmodule.c
 *** Python-3.3.2-origin/Modules/socketmodule.c	2013-05-16 00:32:59.000000000 +0800
 --- Python-3.3.2/Modules/socketmodule.c	2013-05-27 15:29:19.563134945 +0800
@@ -55,9 +130,76 @@ diff -rc Python-3.3.2-origin/Modules/socketmodule.c Python-3.3.2/Modules/socketm
   #ifndef linux
   # undef HAVE_GETHOSTBYNAME_R_3_ARG
   # undef HAVE_GETHOSTBYNAME_R_5_ARG
+diff -rc Python-3.3.2-origin/Modules/termios.c Python-3.3.2/Modules/termios.c
+*** Python-3.3.2-origin/Modules/termios.c	2013-05-16 00:32:59.000000000 +0800
+--- Python-3.3.2/Modules/termios.c	2013-05-28 13:17:20.918068465 +0800
+***************
+*** 220,225 ****
+--- 220,226 ----
+      return Py_None;
+  }
+  
++ #ifndef ANDROID
+  PyDoc_STRVAR(termios_tcdrain__doc__,
+  "tcdrain(fd) -> None\n\
+  \n\
+***************
+*** 239,244 ****
+--- 240,246 ----
+      Py_INCREF(Py_None);
+      return Py_None;
+  }
++ #endif
+  
+  PyDoc_STRVAR(termios_tcflush__doc__,
+  "tcflush(fd, queue) -> None\n\
+***************
+*** 294,301 ****
+--- 296,305 ----
+       METH_VARARGS, termios_tcsetattr__doc__},
+      {"tcsendbreak", termios_tcsendbreak,
+       METH_VARARGS, termios_tcsendbreak__doc__},
++ #ifndef ANDROID
+      {"tcdrain", termios_tcdrain,
+       METH_VARARGS, termios_tcdrain__doc__},
++ #endif
+      {"tcflush", termios_tcflush,
+       METH_VARARGS, termios_tcflush__doc__},
+      {"tcflow", termios_tcflow,
+diff -rc Python-3.3.2-origin/Objects/unicodeobject.c Python-3.3.2/Objects/unicodeobject.c
+*** Python-3.3.2-origin/Objects/unicodeobject.c	2013-05-16 00:32:59.000000000 +0800
+--- Python-3.3.2/Objects/unicodeobject.c	2013-05-28 13:54:18.706038327 +0800
+***************
+*** 47,52 ****
+--- 47,57 ----
+  #include <windows.h>
+  #endif
+  
++ #ifdef ANDROID
++   extern size_t android_mbstowcs(wchar_t *dest, char * in, int maxlen);
++   extern size_t android_wcstombs(char * dest, wchar_t *source, int maxlen);
++ #endif
++ 
+  /* Endianness switches; defaults to little endian */
+  
+  #ifdef WORDS_BIGENDIAN
+***************
+*** 3643,3649 ****
+--- 3648,3658 ----
+          }
+  
+          /* This shouldn't fail now */
++ #ifndef ANDROID
+          wlen2 = mbstowcs(wstr, str, wlen+1);
++ #else
++         wlen2 = android_mbstowcs(wstr, str, wlen+1);
++ #endif
+          if (wlen2 == (size_t)-1) {
+              if (wstr != smallbuf)
+                  PyMem_Free(wstr);
 diff -rc Python-3.3.2-origin/Python/bltinmodule.c Python-3.3.2/Python/bltinmodule.c
 *** Python-3.3.2-origin/Python/bltinmodule.c	2013-05-16 00:33:00.000000000 +0800
---- Python-3.3.2/Python/bltinmodule.c	2013-05-27 15:27:44.071136243 +0800
+--- Python-3.3.2/Python/bltinmodule.c	2013-05-28 13:12:27.678072449 +0800
 ***************
 *** 24,30 ****
   #ifdef HAVE_MBCS
@@ -77,10 +219,23 @@ diff -rc Python-3.3.2-origin/Python/bltinmodule.c Python-3.3.2/Python/bltinmodul
   #else
 diff -rc Python-3.3.2-origin/Python/fileutils.c Python-3.3.2/Python/fileutils.c
 *** Python-3.3.2-origin/Python/fileutils.c	2013-05-16 00:33:00.000000000 +0800
---- Python-3.3.2/Python/fileutils.c	2013-05-27 15:34:00.199131131 +0800
+--- Python-3.3.2/Python/fileutils.c	2013-05-28 14:26:10.582012347 +0800
+***************
+*** 4,9 ****
+--- 4,13 ----
+  #  include <windows.h>
+  #endif
+  
++ #ifdef ANDROID
++ extern size_t android_wcstombs(char * dest, wchar_t *source, int maxlen);
++ #endif
++ 
+  #ifdef HAVE_LANGINFO_H
+  #include <locale.h>
+  #include <langinfo.h>
 ***************
 *** 98,103 ****
---- 98,104 ----
+--- 102,108 ----
       };
   #endif
   
@@ -90,7 +245,7 @@ diff -rc Python-3.3.2-origin/Python/fileutils.c Python-3.3.2/Python/fileutils.c
           goto error;
 ***************
 *** 105,110 ****
---- 106,114 ----
+--- 110,118 ----
           /* the LC_CTYPE locale is different than C */
           return 0;
       }
@@ -100,6 +255,58 @@ diff -rc Python-3.3.2-origin/Python/fileutils.c Python-3.3.2/Python/fileutils.c
   
   #if defined(HAVE_LANGINFO_H) && defined(CODESET)
       codeset = nl_langinfo(CODESET);
+***************
+*** 282,287 ****
+--- 290,296 ----
+  #else
+      argsize = mbstowcs(NULL, arg, 0);
+  #endif
++ #ifndef ANDROID
+      if (argsize != (size_t)-1) {
+          res = (wchar_t *)PyMem_Malloc((argsize+1)*sizeof(wchar_t));
+          if (!res)
+***************
+*** 302,307 ****
+--- 311,317 ----
+          }
+          PyMem_Free(res);
+      }
++ #endif
+      /* Conversion failed. Fall back to escaping with surrogateescape. */
+  #ifdef HAVE_MBRTOWC
+      /* Try conversion with mbrtwoc (C99), and escape non-decodable bytes. */
+***************
+*** 447,456 ****
+--- 457,471 ----
+              }
+              else {
+                  buf[0] = c;
++ #ifndef ANDROID
+                  if (bytes != NULL)
+                      converted = wcstombs(bytes, buf, size);
+                  else
+                      converted = wcstombs(NULL, buf, 0);
++ #else
++                 converted = 1;
++                 if (bytes != NULL) *bytes = c;
++ #endif
+                  if (converted == (size_t)-1) {
+                      if (result != NULL)
+                          PyMem_Free(result);
+***************
+*** 558,564 ****
+--- 573,583 ----
+      char *cpath;
+      char cmode[10];
+      size_t r;
++ #ifndef ANDROID
+      r = wcstombs(cmode, mode, 10);
++ #else
++     r = android_wcstombs(cmode, mode, 10);
++ #endif
+      if (r == (size_t)-1 || r >= 10) {
+          errno = EINVAL;
+          return NULL;
 diff -rc Python-3.3.2-origin/Python/formatter_unicode.c Python-3.3.2/Python/formatter_unicode.c
 *** Python-3.3.2-origin/Python/formatter_unicode.c	2013-05-16 00:33:00.000000000 +0800
 --- Python-3.3.2/Python/formatter_unicode.c	2013-05-27 15:35:04.819130253 +0800
@@ -123,6 +330,55 @@ diff -rc Python-3.3.2-origin/Python/formatter_unicode.c Python-3.3.2/Python/form
       }
       case LT_DEFAULT_LOCALE:
           locale_info->decimal_point = PyUnicode_FromOrdinal('.');
+diff -rc Python-3.3.2-origin/Python/getplatform.c Python-3.3.2/Python/getplatform.c
+*** Python-3.3.2-origin/Python/getplatform.c	2013-05-16 00:33:00.000000000 +0800
+--- Python-3.3.2/Python/getplatform.c	2013-05-28 14:07:53.638027253 +0800
+***************
+*** 1,6 ****
+- 
+  #include "Python.h"
+  
+  #ifndef PLATFORM
+  #define PLATFORM "unknown"
+  #endif
+--- 1,30 ----
+  #include "Python.h"
+  
++ #ifdef ANDROID
++ #include <sys/utsname.h>
++ #include <string.h>
++ char XPLATFORM[20]; // taken as base linux-armv7l-2.6
++ 
++ const char *
++ Py_GetPlatform(void)
++ {
++     if (XPLATFORM[0]!=0)
++         return XPLATFORM;
++ 
++     struct utsname u;
++     int i;
++     if ( uname(&u) < 0 )
++         return "unknown";
++ 
++     strcat (XPLATFORM, u.sysname);
++     strcat (XPLATFORM, "-");
++     strcat (XPLATFORM, u.machine);
++     for (i=0; XPLATFORM[i]; i++)
++         XPLATFORM[i]=tolower(XPLATFORM[i]);
++     return XPLATFORM;
++ }
++ #else
++ 
+  #ifndef PLATFORM
+  #define PLATFORM "unknown"
+  #endif
+***************
+*** 10,12 ****
+--- 34,37 ----
+  {
+  	return PLATFORM;
+  }
++ #endif
 diff -rc Python-3.3.2-origin/Python/pystrtod.c Python-3.3.2/Python/pystrtod.c
 *** Python-3.3.2-origin/Python/pystrtod.c	2013-05-16 00:33:00.000000000 +0800
 --- Python-3.3.2/Python/pystrtod.c	2013-05-27 15:58:40.015111022 +0800
@@ -156,6 +412,70 @@ diff -rc Python-3.3.2-origin/Python/pystrtod.c Python-3.3.2/Python/pystrtod.c
   
       if (decimal_point[0] != '.' || decimal_point[1] != 0) {
           size_t decimal_point_len = strlen(decimal_point);
+diff -rc Python-3.3.2-origin/Python/pythonrun.c Python-3.3.2/Python/pythonrun.c
+*** Python-3.3.2-origin/Python/pythonrun.c	2013-05-16 00:33:00.000000000 +0800
+--- Python-3.3.2/Python/pythonrun.c	2013-05-28 13:57:56.930035362 +0800
+***************
+*** 29,34 ****
+--- 29,72 ----
+  #include <langinfo.h>
+  #endif
+  
++ #ifdef ANDROID
++ size_t android_mbstowcs(wchar_t *dest, char * in, int maxlen) 
++ {
++     wchar_t *out = dest;
++     int size = 0;
++     if (in) 
++     {
++       while(*in && size<maxlen) {
++           if(*in < 128)
++               *out++ = *in++;
++           else
++               *out++ = 0xdc00 + *in++;
++          size += 1;     
++       }
++     }  
++     *out = 0;
++     return size;
++ }  
++ 
++ size_t android_wcstombs(char * dest, wchar_t *source, int maxlen)
++ {
++   wchar_t c;
++   int i;
++   for (i=0; i<maxlen && source[i]; i++) 
++   {
++     c=source[i];
++     if (c >= 0xdc80 && c <= 0xdcff) 
++     {
++       /* UTF-8b surrogate */
++       c-=0xdc00;
++     }
++     if (dest) dest[i]=c;  
++   }
++   return i;  
++ }
++   
++ #endif
++ 
+  #ifdef MS_WINDOWS
+  #undef BYTE
+  #include "windows.h"
+***************
+*** 813,819 ****
+--- 851,861 ----
+      if (home == NULL && !Py_IgnoreEnvironmentFlag) {
+          char* chome = Py_GETENV("PYTHONHOME");
+          if (chome) {
++ #ifndef ANDROID
+              size_t r = mbstowcs(env_home, chome, PATH_MAX+1);
++ #else
++             size_t r = android_mbstowcs(env_home, chome, PATH_MAX+1);
++ #endif
+              if (r != (size_t)-1 && r <= PATH_MAX)
+                  home = env_home;
+          }
 diff -rc Python-3.3.2-origin/setup.py Python-3.3.2/setup.py
 *** Python-3.3.2-origin/setup.py	2013-05-16 00:33:00.000000000 +0800
 --- Python-3.3.2/setup.py	2013-05-27 15:26:30.555137242 +0800
