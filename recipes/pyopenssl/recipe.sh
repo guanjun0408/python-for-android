@@ -19,9 +19,6 @@ function build_pyopenssl() {
 
 	cd $BUILD_pyopenssl
 
-    mv $BUILD_PATH/python-install/lib/python3.3/lib-dynload $BUILD_PATH/python-install/lib/python3.3/lib-dynload.bak 
-    cp -R $BUILD_PATH/python_host/lib/python3.3/lib-dynload $BUILD_PATH/python-install/lib/python3.3/
-
 	push_arm
 
 	export CC="$CC -I$BUILD_openssl/include"
@@ -29,6 +26,9 @@ function build_pyopenssl() {
 
 	try $BUILD_PATH/python-install/bin/python.host setup.py build_ext -v
 	try find build/lib.* -name "*.o" -exec $STRIP {} \;
+
+    mv $BUILD_PATH/python-install/lib/python3.3/lib-dynload $BUILD_PATH/python-install/lib/python3.3/lib-dynload.bak 
+    cp -R $BUILD_PATH/python_host/lib/python3.3/lib-dynload $BUILD_PATH/python-install/lib/python3.3/
 
 	try $BUILD_PATH/python-install/bin/python.host setup.py install -O2
 

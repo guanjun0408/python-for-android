@@ -76,7 +76,7 @@
 
 /* Define if mbstowcs(NULL, "text", 0) does not return the number of wide
    chars that would be converted. */
-#define HAVE_BROKEN_MBSTOWCS
+#define HAVE_BROKEN_MBSTOWCS 1
 
 /* Define if nice() returns success/failure instead of the new priority. */
 /* #undef HAVE_BROKEN_NICE */
@@ -310,7 +310,7 @@
 
 /* Define if we can use gcc inline assembler to get and set x87 control word
    */
-#define HAVE_GCC_ASM_FOR_X87 1
+/* #undef HAVE_GCC_ASM_FOR_X87 */
 
 /* Define if your compiler provides __uint128_t */
 /* #undef HAVE_GCC_UINT128_T */
@@ -334,7 +334,7 @@
 /* #undef HAVE_GETHOSTBYNAME */
 
 /* Define this if you have some version of gethostbyname_r() */
-#define HAVE_GETHOSTBYNAME_R 1
+/* #define HAVE_GETHOSTBYNAME_R 1 */
 
 /* Define this if you have the 3-arg version of gethostbyname_r(). */
 /* #undef HAVE_GETHOSTBYNAME_R_3_ARG */
@@ -539,7 +539,7 @@
 #define HAVE_MAKEDEV 1
 
 /* Define to 1 if you have the `mbrtowc' function. */
-#undef HAVE_MBRTOWC
+/* #define HAVE_MBRTOWC 1 */
 
 /* Define to 1 if you have the `memmove' function. */
 #define HAVE_MEMMOVE 1
@@ -749,7 +749,7 @@
 #define HAVE_SETITIMER 1
 
 /* Define to 1 if you have the `setlocale' function. */
-#undef HAVE_SETLOCALE
+/* #define HAVE_SETLOCALE 1 */
 
 /* Define to 1 if you have the `setpgid' function. */
 #define HAVE_SETPGID 1
@@ -1108,13 +1108,13 @@
 #define HAVE_WCHAR_H 1
 
 /* Define to 1 if you have the `wcscoll' function. */
-#undef HAVE_WCSCOLL
+/* #define HAVE_WCSCOLL 1 */
 
 /* Define to 1 if you have the `wcsftime' function. */
-#undef HAVE_WCSFTIME
+/* #define HAVE_WCSFTIME 1 */
 
 /* Define to 1 if you have the `wcsxfrm' function. */
-#undef HAVE_WCSXFRM
+/* #define HAVE_WCSXFRM 1 */
 
 /* Define if tzset() actually switches the local timezone in a meaningful way.
    */
@@ -1180,7 +1180,7 @@
 /* #undef Py_DEBUG */
 
 /* Defined if Python is built as a shared library. */
-/* #undef Py_ENABLE_SHARED */
+#define Py_ENABLE_SHARED 1
 
 /* assume C89 semantics that RETSIGTYPE is always void */
 #define RETSIGTYPE void

@@ -30,7 +30,7 @@ function build_python() {
 	cd $BUILD_python
 
 	# if the last step have been done, avoid all
-	if [ -f python ]; then
+	if [ -f $BUILD_PATH/python-install/lib/libpython3.3m.so.1.0 ]; then
 		return
 	fi
 
@@ -53,23 +53,23 @@ function build_python() {
     export CFLAGS="$CFLAGS -DANDROID"
     export PATH=$PATH:$BUILD_PATH/python_host/bin
 
-    try ./configure --host=$TOOLCHAIN_PREFIX --build=x86_64-linux --prefix="$BUILD_PATH/python-install" --disable-ipv6 CONFIG_SITE=config.site --disable-framework
+    try ./configure --host=$TOOLCHAIN_PREFIX --build=x86_64-linux --enable-shared --prefix="$BUILD_PATH/python-install" --disable-ipv6 CONFIG_SITE=config.site --disable-framework
 
     try cp $RECIPE_python/pyconfig.h pyconfig.h
+    try cp $RECIPE_python/Setup Modules/Setup
 
     # first run
-    make
+    make INSTSONAME=libpython3.3m.so
 
     # second run
 	try cp $BUILD_hostpython/hostpgen Parser/pgen
-    try cp $RECIPE_python/Setup Modules/Setup
-    try make
-    try make install
+    try make INSTSONAME=libpython3.3m.so
+    try make install INSTSONAME=libpython3.3m.so
 
 	pop_arm
 
 	try cp $BUILD_hostpython/hostpython $BUILD_PATH/python-install/bin/python.host
-	# try cp libpython3.3m.so $LIBS_PATH/
+	try cp libpython3.3m.so $LIBS_PATH/
 }
 
 
