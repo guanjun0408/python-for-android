@@ -159,7 +159,7 @@ function push_arm() {
 		#if [ "X${ANDROIDNDKVER:0:2}" == "Xr7" ] || [ "X$ANDROIDNDKVER" == "Xr8" ]; then
 		# assume this toolchain is the same for all the next ndk... until a new one is out.
 		export TOOLCHAIN_PREFIX=arm-linux-androideabi
-		export TOOLCHAIN_VERSION=4.4.3
+		export TOOLCHAIN_VERSION=4.6
 	fi
 
 	export PATH="$ANDROIDNDK/toolchains/$TOOLCHAIN_PREFIX-$TOOLCHAIN_VERSION/prebuilt/$PYPLATFORM-x86/bin/:$ANDROIDNDK:$ANDROIDSDK/tools:$PATH"
@@ -472,7 +472,7 @@ function run_get_packages() {
 		# download if needed
 		if [ $do_download -eq 1 ]; then
 			info "Downloading $url"
-			try $WGET $filename $url
+			try $WGET $filename $url --no-check-certificate
 		else
 			debug "Module $module already downloaded"
 		fi
