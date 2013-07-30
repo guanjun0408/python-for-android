@@ -20,7 +20,7 @@ function build_openssl() {
 
 	push_arm
 
-	try ./Configure no-dso no-krb5 linux-armv4
+	try ./Configure no-dso no-krb5 android-x86
 	try make build_libs
 
 	pop_arm

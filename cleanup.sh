@@ -3,7 +3,7 @@ find -name "*.pyo" | xargs rm
 find -name "*.py" | xargs rm
 find -name "*.a" | xargs rm
 chmod +w lib/libpython2.7.so
-find -name "*.so" | xargs /var/lib/jenkins/tools/android-ndk-r9/toolchains/arm-linux-androideabi-4.6/prebuilt/linux-x86/bin/arm-linux-androideabi-strip
+find -name "*.so" | xargs /var/lib/jenkins/tools/android-ndk-r9/toolchains/x86-4.6/prebuilt/linux-x86/bin/i686-linux-android-strip
 
 rm -rf share/
 rm -rf bin/
@@ -16,6 +16,9 @@ mv pyconfig.h python2.7/
 popd
 
 pushd lib/python2.7
+rm site-packages/README
+mv site-packages/* .
+rm -rf site-packages/
 rm -rf ctypes/
 rm -rf pkgconfig/
 rm -rf sqlite3/

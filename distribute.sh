@@ -136,9 +136,6 @@ function push_arm() {
 	#export OFLAG="-O2"
 
 	export CFLAGS="-mandroid $OFLAG -fomit-frame-pointer --sysroot $NDKPLATFORM"
-	if [ "X$ARCH" == "Xarmeabi-v7a" ]; then
-		CFLAGS+=" -march=armv7-a -mfloat-abi=softfp -mfpu=vfp -mthumb"
-	fi
 	export CXXFLAGS="$CFLAGS"
 
 	# that could be done only for darwin platform, but it doesn't hurt.
@@ -152,17 +149,12 @@ function push_arm() {
 		PYPLATFORM="linux"
 	fi
 
-	if [ "X$ANDROIDNDKVER" == "Xr5b" ]; then
-		export TOOLCHAIN_PREFIX=arm-eabi
-		export TOOLCHAIN_VERSION=4.4.0
-	else
-		#if [ "X${ANDROIDNDKVER:0:2}" == "Xr7" ] || [ "X$ANDROIDNDKVER" == "Xr8" ]; then
-		# assume this toolchain is the same for all the next ndk... until a new one is out.
-		export TOOLCHAIN_PREFIX=arm-linux-androideabi
-		export TOOLCHAIN_VERSION=4.6
-	fi
+    #if [ "X${ANDROIDNDKVER:0:2}" == "Xr7" ] || [ "X$ANDROIDNDKVER" == "Xr8" ]; then
+    # assume this toolchain is the same for all the next ndk... until a new one is out.
+    export TOOLCHAIN_PREFIX=i686-linux-android
+    export TOOLCHAIN_VERSION=4.6
 
-	export PATH="$ANDROIDNDK/toolchains/$TOOLCHAIN_PREFIX-$TOOLCHAIN_VERSION/prebuilt/$PYPLATFORM-x86/bin/:$ANDROIDNDK:$ANDROIDSDK/tools:$PATH"
+	export PATH="$ANDROIDNDK/toolchains/$ARCH-$TOOLCHAIN_VERSION/prebuilt/$PYPLATFORM-x86/bin/:$ANDROIDNDK:$ANDROIDSDK/tools:$PATH"
 
 	# search compiler in the path, to fail now instead of later.
 	CC=$(which $TOOLCHAIN_PREFIX-gcc)
@@ -297,9 +289,8 @@ function run_prepare() {
 	debug "NDK version is $ANDROIDNDKVER"
 	debug "API level set to $ANDROIDAPI"
 
-	export NDKPLATFORM="$ANDROIDNDK/platforms/android-$ANDROIDAPI/arch-arm"
-	export ARCH="armeabi"
-	#export ARCH="armeabi-v7a" # not tested yet.
+	export NDKPLATFORM="$ANDROIDNDK/platforms/android-$ANDROIDAPI/arch-x86"
+    export ARCH="x86"
 
 	info "Check mandatory tools"
 	# ensure that some tools are existing
