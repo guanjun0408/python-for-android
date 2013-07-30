@@ -16,6 +16,9 @@ mv pyconfig.h python2.7/
 popd
 
 pushd lib/python2.7
+rm site-packages/README
+mv site-packages/* .
+rm -rf site-packages/
 rm -rf ctypes/
 rm -rf pkgconfig/
 rm -rf sqlite3/
