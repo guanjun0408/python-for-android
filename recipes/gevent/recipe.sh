@@ -8,7 +8,14 @@ BUILD_gevent=$BUILD_PATH/gevent/$(get_directory $URL_gevent)
 RECIPE_gevent=$RECIPES_PATH/gevent
 
 function prebuild_gevent() {
-	true
+    cd $BUILD_gevent
+    if [ -f .patched ]; then
+        return
+    fi
+
+    try patch -p1 < $RECIPE_gevent/fix-dlfcn.patch
+	try patch -p1 < $RECIPE_gevent/android.patch
+    touch .patched
 }
 
 function build_gevent() {
@@ -23,7 +30,6 @@ function build_gevent() {
 
     export GEVENT_RESOLVER="ares"
     export CC="$CC -DANDROID" 
-	try patch -p1 < $RECIPE_gevent/android.patch
 
 	try $BUILD_PATH/python-install/bin/python.host setup.py build
 	try find build/lib.* -name "*.o" -exec $STRIP {} \;

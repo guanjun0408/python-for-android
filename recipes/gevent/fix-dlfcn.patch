@@ -1,0 +1,11 @@
+diff -Nur gevent-1.0rc2.orig/gevent/hub.py gevent-1.0rc2/gevent/hub.py
+--- gevent-1.0rc2.orig/gevent/hub.py	2013-07-30 20:03:50.000000000 +0800
++++ gevent-1.0rc2/gevent/hub.py	2013-07-30 20:03:40.000000000 +0800
+@@ -207,6 +207,7 @@
+         package_path = None
+     try:
+         module, item = path.rsplit('.', 1)
++        sys.setdlopenflags(0x2)
+         x = __import__(module)
+         for attr in path.split('.')[1:]:
+             oldx = x
